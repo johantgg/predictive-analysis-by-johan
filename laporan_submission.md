@@ -22,8 +22,7 @@ Masalah utama yang diangkat adalah membangun model untuk mengklasifikasikan apak
 
 ## Data Understanding
 
-
-![Missing Values](app_missing_heatmap.png)
+![app_missing_heatmap](https://github.com/user-attachments/assets/9fbe4e8b-1444-4091-94f5-a9dfc4e6e8e9)
 
 ### Jumlah Data
 - **application_record.csv**: 438.557 baris, 18 kolom. Berisi informasi pribadi dan demografi pemohon.
@@ -81,10 +80,7 @@ Label akhir per pemohon ditentukan dari nilai maksimum STATUS per ID.
 
 
 ## Data Preparation
-
-
-![Data Preparation](data_preparation.png)
-
+![data_preparation](https://github.com/user-attachments/assets/f062272f-e10f-48ac-96c3-075e4b007709)
 
 Langkah-langkah persiapan data dilakukan secara terstruktur untuk memastikan data siap digunakan dalam proses pelatihan model machine learning. Berikut tahapan yang dilakukan:
 
