@@ -205,7 +205,7 @@ Model **XGBoost** dipilih sebagai model terbaik karena menunjukkan performa ting
 - Model robust, scalable, dan mendukung interpretabilitas (dapat melihat feature importance).
 
 
-![eval metrics](https://github.com/user-attachments/assets/46cbb9f2-ffad-4f3c-8ce5-c788a5e39e1a)
+
 
 
 
@@ -217,10 +217,6 @@ Model **XGBoost** dipilih sebagai model terbaik karena menunjukkan performa ting
 
 ---
 
-## ⚠️ Catatan Akhir
-
-Walaupun KNN menunjukkan akurasi yang sangat tinggi, model ini rawan overfitting pada dataset yang besar atau high-dimensional. Oleh karena itu, **XGBoost lebih layak untuk implementasi nyata** karena lebih seimbang dan dapat dioptimalkan lebih lanjut.
-
 
 
 ### Hubungan dengan Business Understanding
@@ -231,8 +227,10 @@ Walaupun KNN menunjukkan akurasi yang sangat tinggi, model ini rawan overfitting
 
 ## Kesimpulan
 
-![conclusion](https://github.com/user-attachments/assets/b3225ec9-331f-4537-81d4-22846baff071)
 
+
+![eval metrics](https://github.com/user-attachments/assets/46cbb9f2-ffad-4f3c-8ce5-c788a5e39e1a)
+![conclusion](https://github.com/user-attachments/assets/b3225ec9-331f-4537-81d4-22846baff071)
 
 
 Model XGBoost menunjukkan performa terbaik dengan akurasi dan f1-score tertinggi dibandingkan model lain. Meskipun recall untuk kelas buruk masih bisa ditingkatkan, model ini sudah cukup baik untuk diterapkan dalam sistem penilaian risiko kredit oleh lembaga keuangan. Diperlukan iterasi dan tuning lebih lanjut untuk mencapai performa maksimal.
