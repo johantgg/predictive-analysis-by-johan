@@ -201,7 +201,7 @@ Model **XGBoost** dipilih sebagai model terbaik karena menunjukkan performa ting
 
 - **Precision tinggi** pada kelas gagal bayar (penting untuk menghindari risiko).
 - **Recall memadai**, artinya model tidak melewatkan terlalu banyak nasabah bermasalah.
-- **Macro F1-score sebesar 0.92**, paling seimbang dari seluruh model.
+- **Macro F1-score sebesar 0.96**, paling seimbang dari seluruh model.
 - Model robust, scalable, dan mendukung interpretabilitas (dapat melihat feature importance).
 
 
