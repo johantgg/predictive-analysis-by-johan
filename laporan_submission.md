@@ -192,17 +192,7 @@ Setelah melakukan evaluasi terhadap enam model machine learning, berikut ringkas
 | Random Forest       | 0.85     | 0.88      | 0.85   | 0.85     | Stabil, kuat untuk generalisasi                  |
 | **XGBoost**         | **0.96** | **0.96**  | **0.96** | **0.96** | **Terbaik secara keseluruhan**                 |
 
-![logreg](https://github.com/user-attachments/assets/78efd458-d83d-41a2-87f1-e4a20a313b92)
 
-![KNN](https://github.com/user-attachments/assets/3dfadac0-3aad-4fca-946c-becf2e6b3f40)
-
-![SVM](https://github.com/user-attachments/assets/30657f9a-4572-4405-b813-b8fc70001b8d)
-
-![dtree](https://github.com/user-attachments/assets/0e84df66-e37d-47f6-8b82-85bf9d261f01)
-
-![RF](https://github.com/user-attachments/assets/f4e07015-fe9f-41da-88d3-227f7600196a)
-
-![XGB](https://github.com/user-attachments/assets/8c3b56d5-e66a-41c8-bf0b-e3cace8ea412)
 
 
 ## 🎯 Model Terbaik: XGBoost
@@ -214,7 +204,10 @@ Model **XGBoost** dipilih sebagai model terbaik karena menunjukkan performa ting
 - **Macro F1-score sebesar 0.92**, paling seimbang dari seluruh model.
 - Model robust, scalable, dan mendukung interpretabilitas (dapat melihat feature importance).
 
----
+
+![eval metrics](https://github.com/user-attachments/assets/46cbb9f2-ffad-4f3c-8ce5-c788a5e39e1a)
+
+
 
 ## 💼 Rekomendasi Implementasi
 
