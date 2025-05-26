@@ -115,8 +115,6 @@ Langkah-langkah persiapan data dilakukan secara terstruktur untuk memastikan dat
 
 ## Modeling
 
-![Modeling](modeling_structure.pdf)
-
 ## Model Development
 
 Dalam tahap ini, dilakukan pelatihan dan evaluasi beberapa model machine learning. Semua model dilatih menggunakan data hasil oversampling dari SMOTE.
@@ -169,8 +167,7 @@ Dalam tahap ini, dilakukan pelatihan dan evaluasi beberapa model machine learnin
 
 ## Evaluation
 
-![Data Preparation](data_preparation.png)
-
+![evaluation_metrics](https://github.com/user-attachments/assets/4b7ba8fa-060e-4f98-aeba-6dda2f8b42d8)
 
 
 ### Metrik Evaluasi
@@ -231,8 +228,9 @@ Walaupun KNN menunjukkan akurasi yang sangat tinggi, model ini rawan overfitting
 
 ## Kesimpulan
 
+![conclusion](https://github.com/user-attachments/assets/b3225ec9-331f-4537-81d4-22846baff071)
 
-![Conclusion Insight](conclusion.png)
+
 
 Model XGBoost menunjukkan performa terbaik dengan akurasi dan f1-score tertinggi dibandingkan model lain. Meskipun recall untuk kelas buruk masih bisa ditingkatkan, model ini sudah cukup baik untuk diterapkan dalam sistem penilaian risiko kredit oleh lembaga keuangan. Diperlukan iterasi dan tuning lebih lanjut untuk mencapai performa maksimal.
 
