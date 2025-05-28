@@ -167,8 +167,6 @@ Dalam tahap ini, dilakukan pelatihan dan evaluasi beberapa model machine learnin
 
 ## Evaluation
 
-
-
 ### Metrik Evaluasi
 
 Model dievaluasi berdasarkan:
