@@ -6,6 +6,14 @@ Kartu skor kredit adalah sistem yang digunakan industri keuangan untuk menilai r
 
 Masalah utama yang diangkat adalah membangun model untuk mengklasifikasikan apakah pelamar termasuk klien 'baik' atau 'buruk'. Definisi eksplisit dari label ini tidak tersedia, sehingga harus diturunkan dari data historis (`credit_record.csv`). Tantangan tambahan mencakup ketidakseimbangan kelas dan data yang tidak lengkap.
 
+### Referensi Terkait
+
+* Brown, I., & Mues, C. (2012). *An experimental comparison of classification algorithms for imbalanced credit scoring data sets.* Expert Systems with Applications, 39(3), 3446–3453. [https://doi.org/10.1016/j.eswa.2011.09.033](https://doi.org/10.1016/j.eswa.2011.09.033)
+
+* Lessmann, S., Baesens, B., Seow, H. V., & Thomas, L. C. (2015). *Benchmarking state-of-the-art classification algorithms for credit scoring: An update of research.* European Journal of Operational Research, 247(1), 124–136. [https://doi.org/10.1016/j.ejor.2015.05.030](https://doi.org/10.1016/j.ejor.2015.05.030)
+
+---
+
 ## Business Understanding
 
 ### Problem Statement
@@ -20,12 +28,38 @@ Masalah utama yang diangkat adalah membangun model untuk mengklasifikasikan apak
 * Memberikan rekomendasi keputusan kredit yang lebih akurat dan cepat untuk mendukung proses bisnis lembaga keuangan.
 * Mengurangi tingkat kerugian akibat pemberian kredit bermasalah dengan memanfaatkan data historis dan riwayat kredit pemohon.
 
+### 🧠 Solution Statement
+
+Dalam rangka mencapai tujuan klasifikasi risiko kredit, dua pendekatan solusi utama dirancang dan diterapkan:
+
+1. **Evaluasi Multimodel**
+   Beberapa model machine learning digunakan untuk membandingkan performa dalam mendeteksi pemohon dengan risiko gagal bayar tinggi. Model yang dievaluasi antara lain:
+
+   * Logistic Regression (sebagai baseline sederhana)
+   * K-Nearest Neighbors (KNN)
+   * Support Vector Machine (SVM)
+   * Decision Tree
+   * Random Forest
+   * XGBoost (dengan hasil terbaik)
+
+2. **Pemilihan Model Berdasarkan Evaluasi Metrik**
+   Seluruh model dinilai berdasarkan metrik evaluasi seperti:
+
+   * **Accuracy**: Seberapa sering model memprediksi dengan benar.
+   * **Precision**: Ketepatan dalam memprediksi pemohon gagal bayar.
+   * **Recall**: Kemampuan model mendeteksi semua pemohon yang benar-benar gagal bayar.
+   * **F1-Score**: Harmoni antara precision dan recall.
+
+Solusi akhir dipilih berdasarkan model dengan skor metrik terbaik, khususnya yang dapat menangani ketidakseimbangan dan relevan dalam konteks bisnis kredit.
+
+---
+
 ## Data Understanding
 
 ![app_missing_heatmap](https://github.com/user-attachments/assets/9fbe4e8b-1444-4091-94f5-a9dfc4e6e8e9)
 
 ### Jumlah Data
-- **application_record.csv**: 438.557 baris, 18 kolom. Berisi informasi pribadi dan demografi pemohon.
+- **application_record.csv**: 438.557 baris, 438557 kolom. Berisi informasi pribadi dan demografi pemohon.
 - **credit_record.csv**: 1.048.575 baris, 3 kolom. Berisi histori pembayaran kredit bulanan.
 
 ### Kondisi Data
@@ -34,7 +68,7 @@ Masalah utama yang diangkat adalah membangun model untuk mengklasifikasikan apak
   - Duplikat: Tidak ditemukan data duplikat.
 - **credit_record.csv**:
   - Missing value: Tidak ada nilai kosong.
-  - Duplikat: Tidak ditemukan data duplikat.
+  - Duplikat: Ditemukan data duplikat.
 
 ### Tautan Sumber Data
 Dataset dapat diakses di: [Kaggle Credit Card Approval Dataset](https://www.kaggle.com/datasets/rikdifos/credit-card-approval-prediction)
@@ -77,7 +111,69 @@ STATUS diolah dengan aturan:
 
 Label akhir per pemohon ditentukan dari nilai maksimum STATUS per ID.
 
+---
 
+## 🔍 Exploratory Data Analysis (EDA)
+
+Untuk memahami struktur dan distribusi data sebelum modeling, dilakukan eksplorasi data sebagai berikut:
+
+### Visualisasi Missing Value
+
+Dilakukan visualisasi nilai kosong pada `application_record.csv`:
+
+```python
+sns.heatmap(app.isnull(), cbar=False, cmap='viridis')
+```
+
+Hasil menunjukkan hanya kolom `OCCUPATION_TYPE` yang memiliki nilai kosong dalam jumlah signifikan (>30%).
+
+### Distribusi Fitur Numerik
+
+Beberapa fitur numerik yang dieksplorasi:
+
+* `CNT_CHILDREN`: Jumlah anak tanggungan
+* `AMT_INCOME_TOTAL`: Total penghasilan
+* `DAYS_BIRTH`: Umur (dalam hari negatif)
+* `DAYS_EMPLOYED`: Lama bekerja (hari negatif)
+* `CNT_FAM_MEMBERS`: Jumlah anggota keluarga
+
+Visualisasi histogram menunjukkan sebaran fitur-fitur tersebut condong ke kanan (right-skewed), khususnya penghasilan (`AMT_INCOME_TOTAL`).
+
+### Distribusi Fitur Kategorikal
+
+Fitur kategorikal yang dieksplorasi:
+
+* `CODE_GENDER`: Laki-laki / Perempuan
+* `FLAG_OWN_CAR`: Kepemilikan mobil
+* `FLAG_OWN_REALTY`: Kepemilikan properti
+* `NAME_INCOME_TYPE`, `NAME_EDUCATION_TYPE`, `NAME_FAMILY_STATUS`, `NAME_HOUSING_TYPE`
+
+Sebagian besar pemohon berpendidikan menengah, memiliki rumah tinggal sendiri, dan memiliki status menikah.
+
+### Korelasi Antar Fitur Numerik
+
+Korelasi antara fitur numerik divisualisasikan menggunakan *heatmap*. Ditemukan:
+
+* Korelasi negatif tinggi antara `DAYS_BIRTH` dan `DAYS_EMPLOYED` mengindikasikan bahwa semakin tua usia, cenderung semakin lama bekerja.
+* `CNT_CHILDREN` memiliki korelasi rendah dengan fitur lain.
+
+### Pembentukan Target: Gagal Bayar
+
+Fitur `STATUS` dari `credit_record.csv` digunakan untuk membentuk label target:
+
+* Nilai `0, 1, C, X` → Tidak gagal bayar (0)
+* Nilai `2` ke atas → Gagal bayar (1)
+
+Label target ditentukan berdasarkan status terburuk per ID.
+
+### Distribusi Target
+
+Distribusi target setelah labeling:
+
+* **0 (Lancar)**: Mayoritas pemohon
+* **1 (Gagal bayar)**: Minoritas (\~8-10%)
+
+Distribusi ini menunjukkan **ketidakseimbangan kelas**, yang menjadi tantangan penting dalam modeling.
 
 ## Data Preparation
 ![data_preparation](https://github.com/user-attachments/assets/f062272f-e10f-48ac-96c3-075e4b007709)
@@ -102,14 +198,14 @@ Langkah-langkah persiapan data dilakukan secara terstruktur untuk memastikan dat
 6. **Join Dataset**  
    Digabung berdasarkan kolom `ID`.
 
-7. **Menangani Ketidakseimbangan Kelas**  
-   Diterapkan SMOTE untuk menyeimbangkan kelas target.
-
-8. **Split Data**  
+7. **Split Data**  
    Data dibagi dengan rasio 70% training dan 30% testing.
 
-9. **Normalisasi Fitur**  
+8. **Normalisasi Fitur**  
    Menggunakan MinMaxScaler.
+
+9. **Menangani Ketidakseimbangan Kelas**
+Diterapkan SMOTE untuk menyeimbangkan kelas target.
 
 
 
@@ -124,7 +220,7 @@ Dalam tahap ini, dilakukan pelatihan dan evaluasi beberapa model machine learnin
 1. **Logistic Regression**
    Logistic Regression adalah model linier untuk klasifikasi biner yang menggunakan fungsi sigmoid.
    code : 
-   LogisticRegression(random_state=42)
+   LogisticRegression()
 
    Model ini digunakan tanpa tuning tambahan karena menjadi baseline awal.
 
@@ -139,7 +235,7 @@ Dalam tahap ini, dilakukan pelatihan dan evaluasi beberapa model machine learnin
 3. **Support Vector Machine (SVM)**
    SVM bekerja dengan mencari hyperplane terbaik yang memisahkan kelas dalam data. Kernel yang digunakan adalah RBF (default). SVM cocok digunakan pada data dengan dimensi tinggi.
    Parameter yang digunakan:
-   SVC(kernel='rbf', C=1.0, gamma='scale', random_state=42)
+   SVC(kernel='rbf', C=1.0, gamma='scale', )
 
    * kernel='rbf': Kernel non-linear (default).
    * C: Kontrol regularisasi.
@@ -148,22 +244,97 @@ Dalam tahap ini, dilakukan pelatihan dan evaluasi beberapa model machine learnin
 4. **Decision Tree**
    Model pohon keputusan memisahkan data berdasarkan aturan tertentu untuk membentuk struktur pohon. Setiap node memisahkan data berdasarkan fitur yang paling informatif. Model ini digunakan dengan parameter default.
    Parameter yang digunakan:
-   DecisionTreeClassifier(random_state=42, max_depth=None)
+   DecisionTreeClassifier(max_depth=None)
 
    Model ini digunakan dengan parameter default. Dapat dikembangkan dengan tuning max_depth dan min_samples_split
 
 5. **Random Forest**
    Random Forest adalah ensemble dari banyak pohon keputusan yang dibangun dari subset acak data. Hasil klasifikasi ditentukan melalui voting mayoritas. Model ini tahan terhadap overfitting dan memberikan hasil yang stabil.
    Parameter:
-   RandomForestClassifier(n_estimators=100, random_state=42)
+   RandomForestClassifier(n_estimators=100)
    * n_estimators: Jumlah pohon dalam hutan.
 
 6. **XGBoost (Extreme Gradient Boosting)**
    XGBoost adalah metode boosting berbasis pohon yang cepat dan efisien. Model dibangun secara bertahap, di mana setiap iterasi bertujuan untuk mengoreksi kesalahan dari model sebelumnya. XGBoost menggunakan regularisasi untuk menghindari overfitting dan dirancang untuk performa tinggi.
    Parameter default:
-   XGBClassifier(random_state=42, use_label_encoder=False, eval_metric='logloss')
+   XGBClassifier(use_label_encoder=False, eval_metric='logloss')
 
    Model digunakan dengan parameter default untuk baseline awal. Tuning akan menjadi langkah pengembangan selanjutnya jika diperlukan peningkatan performa.
+
+
+### 🔍 Kelebihan dan Kekurangan Setiap Model
+
+#### 1. **Logistic Regression**
+
+* **Kelebihan**:
+
+  * Interpretasi sederhana dan transparan.
+  * Cepat dan efisien pada dataset kecil.
+  * Cocok untuk baseline.
+* **Kekurangan**:
+
+  * Tidak mampu menangkap hubungan non-linear.
+  * Performa buruk pada data kompleks atau tidak seimbang.
+
+#### 2. **K-Nearest Neighbors (KNN)**
+
+* **Kelebihan**:
+
+  * Algoritma non-parametrik (tidak berasumsi bentuk distribusi).
+  * Sederhana dan mudah diimplementasikan.
+* **Kekurangan**:
+
+  * Sensitif terhadap skala fitur (butuh normalisasi).
+  * Kurang efisien untuk dataset besar karena mahal secara komputasi.
+
+#### 3. **Support Vector Machine (SVM)**
+
+* **Kelebihan**:
+
+  * Mampu menangani data berdimensi tinggi.
+  * Cukup robust terhadap outlier.
+* **Kekurangan**:
+
+  * Kurang efisien di dataset besar.
+  * Sulit diinterpretasi dan tuning parameter bisa kompleks.
+
+#### 4. **Decision Tree**
+
+* **Kelebihan**:
+
+  * Mudah dipahami dan divisualisasikan.
+  * Menangani fitur numerik dan kategorikal dengan baik.
+* **Kekurangan**:
+
+  * Mudah overfitting jika tidak di-pruning.
+  * Sensitif terhadap perubahan kecil pada data.
+
+#### 5. **Random Forest**
+
+* **Kelebihan**:
+
+  * Stabil, mengurangi overfitting dengan ensemble banyak pohon.
+  * Menyediakan estimasi importance fitur.
+* **Kekurangan**:
+
+  * Kurang interpretatif dibanding single tree.
+  * Komputasi lebih berat dibanding model sederhana.
+
+#### 6. **XGBoost**
+
+* **Kelebihan**:
+
+  * Sangat akurat dan efisien.
+  * Memiliki built-in handling terhadap missing value dan imbalance.
+  * Mendukung regularisasi untuk menghindari overfitting.
+* **Kekurangan**:
+
+  * Lebih kompleks dan memerlukan tuning parameter.
+  * Interpretasi model lebih sulit dibanding model linier.
+
+---
+
+
 
 ## Evaluation
 
