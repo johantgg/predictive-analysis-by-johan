@@ -57,9 +57,9 @@ Solusi akhir dipilih berdasarkan model dengan skor metrik terbaik, khususnya yan
 ## Data Understanding
 
 ![app_missing_heatmap](https://github.com/user-attachments/assets/9fbe4e8b-1444-4091-94f5-a9dfc4e6e8e9)
-
+![download (1)](https://github.com/user-attachments/assets/246f67a7-519a-4422-bd9f-0a75b6d3e8a0)
 ### Jumlah Data
-- **application_record.csv**: 438.557 baris, 438557 kolom. Berisi informasi pribadi dan demografi pemohon.
+- **application_record.csv**: 438.557 baris, 18 kolom. Berisi informasi pribadi dan demografi pemohon.
 - **credit_record.csv**: 1.048.575 baris, 3 kolom. Berisi histori pembayaran kredit bulanan.
 
 ### Kondisi Data
@@ -355,11 +355,11 @@ Setelah melakukan evaluasi terhadap enam model machine learning, berikut ringkas
 | Model               | Accuracy | Precision | Recall | F1-Score | Catatan Singkat                                  |
 |---------------------|----------|-----------|--------|----------|--------------------------------------------------|
 | Logistic Regression | 0.51     | 0.51      | 0.51   | 0.50     | Baseline kurang baik, kurang menangani minoritas |
-| KNN                 | 0.78     | 0.84      | 0.78   | 0.77     | Performa rendah, recall kelas 1 buruk            |
-| SVM                 | 0.86     | 0.87      | 0.86   | 0.86     | Cukup baik, relatif seimbang                     |
-| Decision Tree       | 0.86     | 0.89      | 0.86   | 0.86     | Akurat, rawan overfitting                        |
-| Random Forest       | 0.85     | 0.88      | 0.85   | 0.85     | Stabil, kuat untuk generalisasi                  |
-| **XGBoost**         | **0.96** | **0.96**  | **0.96** | **0.96** | **Terbaik secara keseluruhan**                 |
+| KNN                 | 0.72     | 0.79      | 0.72   | 0.70     | Performa rendah, recall kelas 1 buruk            |
+| SVM                 | 0.80     | 0.81      | 0.80   | 0.80     | Cukup baik, relatif seimbang                     |
+| Decision Tree       | 0.84     | 0.87      | 0.84   | 0.84     | Akurat, rawan overfitting                        |
+| Random Forest       | 0.79     | 0.85      | 0.79   | 0.78     | Stabil, kuat untuk generalisasi                  |
+| **XGBoost**         | **0.92** | **0.93**  | **0.92** | **0.92** | **Terbaik secara keseluruhan**                 |
 
 
 
@@ -398,8 +398,8 @@ Model **XGBoost** dipilih sebagai model terbaik karena menunjukkan performa ting
 
 
 
-![eval metrics](https://github.com/user-attachments/assets/46cbb9f2-ffad-4f3c-8ce5-c788a5e39e1a)
-![conclusion](https://github.com/user-attachments/assets/b3225ec9-331f-4537-81d4-22846baff071)
+![clasfmetric](https://github.com/user-attachments/assets/c4edf345-fa3f-4c1e-91b9-769552ca5ee2)
+![accuracy](https://github.com/user-attachments/assets/93ec1bbb-5d06-4227-925e-92f09df7ac6a)
 
 
 Model XGBoost menunjukkan performa terbaik dengan akurasi dan f1-score tertinggi dibandingkan model lain. Meskipun recall untuk kelas buruk masih bisa ditingkatkan, model ini sudah cukup baik untuk diterapkan dalam sistem penilaian risiko kredit oleh lembaga keuangan. Diperlukan iterasi dan tuning lebih lanjut untuk mencapai performa maksimal.
